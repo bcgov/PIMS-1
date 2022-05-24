@@ -6,6 +6,8 @@ using Pims.Core.Extensions;
 using System.Text.Json;
 using Entity = Pims.Dal.Entities;
 using Model = Pims.Api.Areas.Reports.Models.Project;
+using System.Linq;
+using System;
 
 namespace Pims.Api.Areas.Reports.Mapping.Project
 {
@@ -47,6 +49,8 @@ namespace Pims.Api.Areas.Reports.Mapping.Project
                 .Map(dest => dest.CreatedOn, src => src.CreatedOn)
                 .Map(dest => dest.CreatedBy,
                     src => src.CreatedById != null ? src.CreatedBy.DisplayName : null)
+                .Map(dest => dest.TotalLandArea, src => src.Properties.Sum(p => p.Parcel == null ? 0 : p.Parcel.LandArea))
+                .Map(dest => dest.PIDs, src => String.Join(", ", src.Properties.Where(p => p.Parcel != null).Select(p => p.Parcel.PID)))
 
             #region Notes
                 .Map(dest => dest.Note, src => src.GetNoteText(Entity.NoteTypes.General))

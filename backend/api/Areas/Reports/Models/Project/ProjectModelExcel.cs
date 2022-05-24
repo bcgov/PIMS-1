@@ -26,9 +26,14 @@ namespace Pims.Api.Areas.Reports.Models.Project
         public string Description { get; set; }
 
         /// <summary>
+        /// get/set - All project property PIDs.
+        /// </summary>
+        public string PIDs { get; set; }
+
+        /// <summary>
         /// get/set - The reported fiscal year this project.
         /// </summary>
-        
+
         [DisplayName("Reported Fiscal Year")]
         [CsvHelper.Configuration.Attributes.Name("Reported Fiscal Year")]
         public string ReportedFiscalYearString { get; set; }
@@ -36,7 +41,7 @@ namespace Pims.Api.Areas.Reports.Models.Project
         /// <summary>
         /// get/set - The actual or forecasted fiscal year.
         /// </summary>
-        
+
         [DisplayName("Actual Fiscal Year")]
         [CsvHelper.Configuration.Attributes.Name("Actual Fiscal Year")]
         public string ActualFiscalYearString { get; set; }
@@ -75,6 +80,11 @@ namespace Pims.Api.Areas.Reports.Models.Project
         /// get/set - The owning agency full name.
         /// </summary>
         public string Agency { get; set; }
+
+        /// <summary>
+        /// get/set - The land area of the parcel.
+        /// </summary>
+        public float TotalLandArea { get; set; }
 
         /// <summary>
         /// get/set - User name

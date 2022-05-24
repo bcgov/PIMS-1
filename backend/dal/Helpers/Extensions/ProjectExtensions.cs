@@ -46,6 +46,7 @@ namespace Pims.Dal.Helpers.Extensions
                 .Include(p => p.Workflow)
                 .Include(p => p.Agency).ThenInclude(a => a.Parent)
                 .Include(p => p.Notes)
+                .Include(p => p.Properties).ThenInclude(p => p.Parcel)
                 .AsNoTracking();
 
             if (filter.SPLWorkflow == true)

@@ -16,44 +16,56 @@ namespace Pims.Api.Areas.Project.Mapping.Search
                 .Map(dest => dest.PropertyTypeId,
                     src => src.Building != null ? PropertyTypes.Building : PropertyTypes.Land)
                 .Map(dest => dest.Id, src => src.BuildingId ?? src.ParcelId)
-                .Map(dest => dest.Classification,
-                    src => src.Building != null ? src.Building.Classification.Name : src.Parcel.Classification.Name)
-                .Map(dest => dest.Name, src => src.Building != null ? src.Building.Name : src.Parcel.Name)
-                .Map(dest => dest.Address,
-                    src => src.Building != null
-                        ? src.Building.Address.FormatAddress()
-                        : src.Parcel.Address.FormatAddress())
-                .Map(dest => dest.AdministrativeArea,
-                    src => src.Building != null ? src.Building.Address.AdministrativeArea : src.Parcel.Address.AdministrativeArea)
-                .Map(dest => dest.Assessed,
-                    src => src.Building != null
-                        ? GetBuildingAssessedValue(src.Building.Evaluations)
-                        : GetParcelAssessedValue(src.Parcel.Evaluations))
-                .Map(dest => dest.NetBook,
-                    src => src.Building != null
-                        ? GetBuildingNetBookValue(src.Building.Fiscals)
-                        : GetParcelNetBookValue(src.Parcel.Fiscals))
-                .Map(dest => dest.Market,
-                    src => src.Building != null
-                        ? GetBuildingMarketValue(src.Building.Fiscals)
-                        : GetParcelMarketValue(src.Parcel.Fiscals))
-                .Map(dest => dest.Zoning, src => src.Building != null ? src.Building.GetZoning().First() : src.Parcel.Zoning)
-                .Map(dest => dest.ZoningPotential, src => src.Building != null ? src.Building.GetZoningPotential().First() : src.Parcel.ZoningPotential)
+                .Map(dest => dest.Name, src => GetName(src))
 
-                .Map(dest => dest.AgencyCode,
-                    src => src.Building != null ? GetAgencyCode(src.Building.Agency) : GetAgencyCode(src.Parcel.Agency))
-                .Map(dest => dest.SubAgency,
-                    src => src.Building != null ? GetAgencyName(src.Building.Agency) : GetAgencyName(src.Parcel.Agency))
+                // .Map(dest => dest.Classification,
+                //     src => src.Building != null ? src.Building.Classification.Name : src.Parcel.Classification.Name)
+                // .Map(dest => dest.Address,
+                //     src => src.Building != null
+                //         ? src.Building.Address.FormatAddress()
+                //         : src.Parcel.Address.FormatAddress())
+                // .Map(dest => dest.AdministrativeArea,
+                //     src => src.Building != null ? src.Building.Address.AdministrativeArea : src.Parcel.Address.AdministrativeArea)
 
-                .Map(dest => dest.LandArea, src => src.Building != null ? GetLandArea(src.Building.Parcels.FirstOrDefault().Parcel) : GetLandArea(src.Parcel))
-                .Map(dest => dest.ParcelId, src => src.Building != null ? src.Building.Parcels.FirstOrDefault().Parcel.GetId() : src.Parcel.GetId())
+                // .Map(dest => dest.Assessed,
+                //     src => src.Building != null
+                //         ? GetBuildingAssessedValue(src.Building.Evaluations)
+                //         : GetParcelAssessedValue(src.Parcel.Evaluations))
+                // .Map(dest => dest.NetBook,
+                //     src => src.Building != null
+                //         ? GetBuildingNetBookValue(src.Building.Fiscals)
+                //         : GetParcelNetBookValue(src.Parcel.Fiscals))
+                // .Map(dest => dest.Market,
+                //     src => src.Building != null
+                //         ? GetBuildingMarketValue(src.Building.Fiscals)
+                //         : GetParcelMarketValue(src.Parcel.Fiscals))
+                // .Map(dest => dest.Zoning, src => src.Building != null ? src.Building.GetZoning().First() : src.Parcel.Zoning)
+                // .Map(dest => dest.ZoningPotential, src => src.Building != null ? src.Building.GetZoningPotential().First() : src.Parcel.ZoningPotential)
+
+                // .Map(dest => dest.AgencyCode,
+                //     src => src.Building != null ? GetAgencyCode(src.Building.Agency) : GetAgencyCode(src.Parcel.Agency))
+                // .Map(dest => dest.SubAgency,
+                //     src => src.Building != null ? GetAgencyName(src.Building.Agency) : GetAgencyName(src.Parcel.Agency))
+
+                .Map(dest => dest.LandArea, src => GetLandArea(src.Parcel))
+                .Map(dest => dest.ParcelId, src => GetParcelId(src))
                 .Inherits<BaseEntity, BaseModel>();
 
         }
 
-        private float? GetLandArea(Parcel parcel)
+        private int? GetParcelId(ProjectProperty property)
         {
-            return parcel?.LandArea;
+            return property.Building?.Parcels.FirstOrDefault().Parcel.GetId() ?? property.Parcel.GetId();
+        }
+
+        private string GetName(ProjectProperty property)
+        {
+            return property.Building?.Name ?? property.Parcel?.Name;
+        }
+
+        private float GetLandArea(Parcel parcel)
+        {
+            return 0;
         }
 
         private string GetAgencyCode(Agency agency)
