@@ -75,7 +75,7 @@ const Header = () => {
                     {error.error?.response?.config?.url?.substr(0, 20)}
                   </abbr>
                   : ({error.error?.response?.statusText ?? 'unknown'}){' '}
-                  {error.error?.response?.data?.error}
+                  {JSON.stringify(error.error?.response?.data)}
                 </Col>
               )}
             </Row>
